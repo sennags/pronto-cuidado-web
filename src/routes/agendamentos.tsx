@@ -1,11 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/AppLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
   DialogContent,
@@ -21,19 +20,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockAgendamentos, mockMedicos, mockPacientes } from "@/lib/mock-data";
-import { Plus } from "lucide-react";
+import { Plus, CalendarDays, Filter, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { StatusBadge } from "./dashboard";
 
 export const Route = createFileRoute("/agendamentos")({
   component: AgendamentosPage,
 });
 
+type Item = (typeof mockAgendamentos)[number];
+
 function AgendamentosPage() {
-  const [lista, setLista] = useState(mockAgendamentos);
+  const [lista, setLista] = useState<Item[]>(mockAgendamentos);
   const [open, setOpen] = useState(false);
+  const [filtroEsp, setFiltroEsp] = useState<string>("todas");
+  const [aba, setAba] = useState<string>("hoje");
   const [form, setForm] = useState({ paciente: "", medico: "", data: "", hora: "" });
+
+  const hoje = new Date().toISOString().slice(0, 10);
+
+  const filtrados = useMemo(() => {
+    return lista
+      .filter((a) => {
+        if (aba === "hoje") return a.data === hoje;
+        if (aba === "futuros") return a.data > hoje;
+        return true;
+      })
+      .filter((a) => filtroEsp === "todas" || a.especialidade === filtroEsp)
+      .sort((a, b) => (a.data + a.hora).localeCompare(b.data + b.hora));
+  }, [lista, filtroEsp, aba, hoje]);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,26 +65,32 @@ function AgendamentosPage() {
         data: form.data,
         hora: form.hora,
         status: "Confirmado",
+        sala: med?.sala ?? "Sala 01",
       },
     ]);
-    toast.success("Agendamento criado!");
+    toast.success("Agendamento criado com sucesso!");
     setForm({ paciente: "", medico: "", data: "", hora: "" });
     setOpen(false);
   };
 
+  const especialidades = Array.from(new Set(mockMedicos.map((m) => m.especialidade)));
+
   return (
     <AppLayout>
-      <Card>
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <CardTitle>Agendamentos</CardTitle>
+            <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
+              <CalendarDays className="h-5 w-5 text-primary" />
+              Agenda da clínica
+            </h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Visualize e crie consultas para os pacientes.
+              Visualize, filtre e crie consultas em poucos cliques.
             </p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button size="lg">
                 <Plus className="h-4 w-4 mr-2" /> Novo agendamento
               </Button>
             </DialogTrigger>
@@ -116,40 +139,92 @@ function AgendamentosPage() {
               </form>
             </DialogContent>
           </Dialog>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-lg border border-border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Paciente</TableHead>
-                  <TableHead className="hidden md:table-cell">Médico</TableHead>
-                  <TableHead className="hidden lg:table-cell">Especialidade</TableHead>
-                  <TableHead>Data</TableHead>
-                  <TableHead>Hora</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {lista.map((a) => (
-                  <TableRow key={a.id}>
-                    <TableCell className="font-medium">{a.paciente}</TableCell>
-                    <TableCell className="hidden md:table-cell">{a.medico}</TableCell>
-                    <TableCell className="hidden lg:table-cell">{a.especialidade}</TableCell>
-                    <TableCell>{new Date(a.data).toLocaleDateString("pt-BR")}</TableCell>
-                    <TableCell>{a.hora}</TableCell>
-                    <TableCell>
-                      <Badge variant={a.status === "Confirmado" ? "default" : "secondary"}>
-                        {a.status}
-                      </Badge>
-                    </TableCell>
-                  </TableRow>
+        </div>
+
+        <Card>
+          <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3">
+            <Tabs value={aba} onValueChange={setAba}>
+              <TabsList>
+                <TabsTrigger value="hoje">Hoje</TabsTrigger>
+                <TabsTrigger value="futuros">Próximos</TabsTrigger>
+                <TabsTrigger value="todos">Todos</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4 text-muted-foreground" />
+              <Select value={filtroEsp} onValueChange={setFiltroEsp}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="todas">Todas as especialidades</SelectItem>
+                  {especialidades.map((e) => (
+                    <SelectItem key={e} value={e}>{e}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {filtrados.length === 0 ? (
+              <div className="py-16 text-center text-muted-foreground">
+                Nenhum agendamento encontrado para este filtro.
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {filtrados.map((a) => (
+                  <div
+                    key={a.id}
+                    className="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/40 hover:bg-muted/40 transition-all"
+                  >
+                    <div className="flex items-center gap-3 sm:w-44 shrink-0">
+                      <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-primary/15 to-accent/15 flex flex-col items-center justify-center">
+                        <span className="text-[10px] text-muted-foreground uppercase font-medium">
+                          {new Date(a.data).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
+                        </span>
+                        <span className="text-sm font-bold text-foreground -mt-0.5">{a.hora}</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin className="h-3 w-3" />
+                        {a.sala}
+                      </div>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-foreground">{a.paciente}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {a.medico} · {a.especialidade}
+                      </div>
+                    </div>
+                    <StatusBadge status={a.status} />
+                  </div>
                 ))}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Resumo</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <Resumo label="Total" value={lista.length} />
+            <Resumo label="Hoje" value={lista.filter((a) => a.data === hoje).length} />
+            <Resumo label="Confirmados" value={lista.filter((a) => a.status === "Confirmado").length} tone="info" />
+            <Resumo label="Pendentes" value={lista.filter((a) => a.status === "Pendente").length} tone="warning" />
+          </CardContent>
+        </Card>
+      </div>
     </AppLayout>
+  );
+}
+
+function Resumo({ label, value, tone }: { label: string; value: number; tone?: "info" | "warning" }) {
+  const cls = tone === "info" ? "text-info" : tone === "warning" ? "text-warning-foreground" : "text-foreground";
+  return (
+    <div>
+      <div className="text-xs text-muted-foreground">{label}</div>
+      <div className={`text-2xl font-bold ${cls}`}>{value}</div>
+    </div>
   );
 }
