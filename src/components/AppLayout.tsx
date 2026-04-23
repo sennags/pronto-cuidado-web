@@ -66,13 +66,16 @@ export function AppLayout({ children }: { children: ReactNode }) {
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="h-16 flex items-center gap-2 px-6 border-b border-border">
-          <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+        <div className="h-16 flex items-center gap-2.5 px-5 border-b border-border">
+          <div
+            className="h-10 w-10 rounded-xl flex items-center justify-center shadow-sm"
+            style={{ background: "var(--gradient-hero)" }}
+          >
             <HeartPulse className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <div className="font-semibold text-foreground leading-tight">SaúdeClin</div>
-            <div className="text-xs text-muted-foreground">Gestão clínica</div>
+            <div className="font-bold text-foreground leading-tight tracking-tight">SaúdeClin</div>
+            <div className="text-[11px] text-muted-foreground uppercase tracking-wider">{roleLabel[user.role]}</div>
           </div>
         </div>
 
