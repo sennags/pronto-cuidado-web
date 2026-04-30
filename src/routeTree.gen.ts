@@ -14,6 +14,7 @@ import { Route as ProntuarioRouteImport } from './routes/prontuario'
 import { Route as PacientesRouteImport } from './routes/pacientes'
 import { Route as MedicosRouteImport } from './routes/medicos'
 import { Route as LaboratorioRouteImport } from './routes/laboratorio'
+import { Route as HistoricoExamesRouteImport } from './routes/historico-exames'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AgendamentosRouteImport } from './routes/agendamentos'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -44,6 +45,11 @@ const LaboratorioRoute = LaboratorioRouteImport.update({
   path: '/laboratorio',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HistoricoExamesRoute = HistoricoExamesRouteImport.update({
+  id: '/historico-exames',
+  path: '/historico-exames',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -70,6 +76,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/agendamentos': typeof AgendamentosRoute
   '/dashboard': typeof DashboardRoute
+  '/historico-exames': typeof HistoricoExamesRoute
   '/laboratorio': typeof LaboratorioRoute
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/agendamentos': typeof AgendamentosRoute
   '/dashboard': typeof DashboardRoute
+  '/historico-exames': typeof HistoricoExamesRoute
   '/laboratorio': typeof LaboratorioRoute
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/agendamentos': typeof AgendamentosRoute
   '/dashboard': typeof DashboardRoute
+  '/historico-exames': typeof HistoricoExamesRoute
   '/laboratorio': typeof LaboratorioRoute
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/agendamentos'
     | '/dashboard'
+    | '/historico-exames'
     | '/laboratorio'
     | '/medicos'
     | '/pacientes'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/agendamentos'
     | '/dashboard'
+    | '/historico-exames'
     | '/laboratorio'
     | '/medicos'
     | '/pacientes'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/agendamentos'
     | '/dashboard'
+    | '/historico-exames'
     | '/laboratorio'
     | '/medicos'
     | '/pacientes'
@@ -140,6 +152,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AgendamentosRoute: typeof AgendamentosRoute
   DashboardRoute: typeof DashboardRoute
+  HistoricoExamesRoute: typeof HistoricoExamesRoute
   LaboratorioRoute: typeof LaboratorioRoute
   MedicosRoute: typeof MedicosRoute
   PacientesRoute: typeof PacientesRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LaboratorioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/historico-exames': {
+      id: '/historico-exames'
+      path: '/historico-exames'
+      fullPath: '/historico-exames'
+      preLoaderRoute: typeof HistoricoExamesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -220,6 +240,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AgendamentosRoute: AgendamentosRoute,
   DashboardRoute: DashboardRoute,
+  HistoricoExamesRoute: HistoricoExamesRoute,
   LaboratorioRoute: LaboratorioRoute,
   MedicosRoute: MedicosRoute,
   PacientesRoute: PacientesRoute,
