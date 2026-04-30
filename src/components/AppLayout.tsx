@@ -11,6 +11,7 @@ import {
   LogOut,
   HeartPulse,
   Menu,
+  MessageCircle,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ const navItems: NavItem[] = [
   { to: "/agendamentos", label: "Agendamentos", icon: CalendarDays, roles: ["paciente", "recepcionista", "medico", "administrador"] },
   { to: "/medicos", label: "Médicos", icon: Stethoscope, roles: ["paciente", "recepcionista", "administrador"] },
   { to: "/prontuario", label: "Prontuário", icon: FileText, roles: ["medico", "administrador"] },
+  { to: "/whatsapp", label: "WhatsApp", icon: MessageCircle, roles: ["paciente", "recepcionista", "medico", "administrador"] },
   { to: "/admin", label: "Administração", icon: BarChart3, roles: ["administrador"] },
 ];
 

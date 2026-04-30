@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WhatsappRouteImport } from './routes/whatsapp'
 import { Route as ProntuarioRouteImport } from './routes/prontuario'
 import { Route as PacientesRouteImport } from './routes/pacientes'
 import { Route as MedicosRouteImport } from './routes/medicos'
@@ -17,6 +18,11 @@ import { Route as AgendamentosRouteImport } from './routes/agendamentos'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
+const WhatsappRoute = WhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProntuarioRoute = ProntuarioRouteImport.update({
   id: '/prontuario',
   path: '/prontuario',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
   '/prontuario': typeof ProntuarioRoute
+  '/whatsapp': typeof WhatsappRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
   '/prontuario': typeof ProntuarioRoute
+  '/whatsapp': typeof WhatsappRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
   '/prontuario': typeof ProntuarioRoute
+  '/whatsapp': typeof WhatsappRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/medicos'
     | '/pacientes'
     | '/prontuario'
+    | '/whatsapp'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/medicos'
     | '/pacientes'
     | '/prontuario'
+    | '/whatsapp'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/medicos'
     | '/pacientes'
     | '/prontuario'
+    | '/whatsapp'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,10 +131,18 @@ export interface RootRouteChildren {
   MedicosRoute: typeof MedicosRoute
   PacientesRoute: typeof PacientesRoute
   ProntuarioRoute: typeof ProntuarioRoute
+  WhatsappRoute: typeof WhatsappRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/whatsapp': {
+      id: '/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/whatsapp'
+      preLoaderRoute: typeof WhatsappRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/prontuario': {
       id: '/prontuario'
       path: '/prontuario'
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   MedicosRoute: MedicosRoute,
   PacientesRoute: PacientesRoute,
   ProntuarioRoute: ProntuarioRoute,
+  WhatsappRoute: WhatsappRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
