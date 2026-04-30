@@ -13,6 +13,7 @@ import {
   Menu,
   MessageCircle,
   FlaskConical,
+  History,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
@@ -33,6 +34,7 @@ const navItems: NavItem[] = [
   { to: "/prontuario", label: "Prontuário", icon: FileText, roles: ["medico", "administrador"] },
   { to: "/whatsapp", label: "WhatsApp", icon: MessageCircle, roles: ["paciente", "recepcionista", "medico", "administrador"] },
   { to: "/laboratorio", label: "Laboratório", icon: FlaskConical, roles: ["paciente", "recepcionista", "medico", "administrador"] },
+  { to: "/historico-exames", label: "Histórico de Exames", icon: History, roles: ["paciente", "recepcionista", "medico", "administrador"] },
   { to: "/admin", label: "Administração", icon: BarChart3, roles: ["administrador"] },
 ];
 
