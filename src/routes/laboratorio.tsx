@@ -898,13 +898,14 @@ function ModalResultado({ exame, onClose }: { exame: Exame | null; onClose: () =
 
   return (
     <Dialog open={!!exame} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" />
             Resultado do Exame
           </DialogTitle>
         </DialogHeader>
+        <ScrollArea className="flex-1 max-h-[60vh] pr-4">
         <div className="space-y-4 py-4">
           {/* Info do Exame */}
           <div className="p-4 rounded-lg bg-muted/50 space-y-2">
@@ -991,6 +992,7 @@ function ModalResultado({ exame, onClose }: { exame: Exame | null; onClose: () =
             </div>
           )}
         </div>
+        </ScrollArea>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Fechar</Button>
           <Button>
