@@ -278,13 +278,14 @@ function VisaoMedico() {
 
       {/* Modal Solicitar Exame */}
       <Dialog open={modalSolicitar} onOpenChange={setModalSolicitar}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl max-h-[90vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>Solicitar Exame</DialogTitle>
             <DialogDescription>
               Preencha os dados para solicitar um novo exame.
             </DialogDescription>
           </DialogHeader>
+          <ScrollArea className="flex-1 max-h-[60vh] pr-4">
           <div className="space-y-4 py-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -371,6 +372,7 @@ function VisaoMedico() {
               />
             </div>
           </div>
+          </ScrollArea>
           <DialogFooter>
             <Button variant="outline" onClick={() => setModalSolicitar(false)}>Cancelar</Button>
             <Button onClick={handleSolicitar} disabled={!pacienteSelecionado || !exameSelecionado}>
