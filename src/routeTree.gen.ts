@@ -13,6 +13,7 @@ import { Route as WhatsappRouteImport } from './routes/whatsapp'
 import { Route as ProntuarioRouteImport } from './routes/prontuario'
 import { Route as PacientesRouteImport } from './routes/pacientes'
 import { Route as MedicosRouteImport } from './routes/medicos'
+import { Route as LaboratorioRouteImport } from './routes/laboratorio'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AgendamentosRouteImport } from './routes/agendamentos'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -36,6 +37,11 @@ const PacientesRoute = PacientesRouteImport.update({
 const MedicosRoute = MedicosRouteImport.update({
   id: '/medicos',
   path: '/medicos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LaboratorioRoute = LaboratorioRouteImport.update({
+  id: '/laboratorio',
+  path: '/laboratorio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/agendamentos': typeof AgendamentosRoute
   '/dashboard': typeof DashboardRoute
+  '/laboratorio': typeof LaboratorioRoute
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
   '/prontuario': typeof ProntuarioRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/agendamentos': typeof AgendamentosRoute
   '/dashboard': typeof DashboardRoute
+  '/laboratorio': typeof LaboratorioRoute
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
   '/prontuario': typeof ProntuarioRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/agendamentos': typeof AgendamentosRoute
   '/dashboard': typeof DashboardRoute
+  '/laboratorio': typeof LaboratorioRoute
   '/medicos': typeof MedicosRoute
   '/pacientes': typeof PacientesRoute
   '/prontuario': typeof ProntuarioRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/agendamentos'
     | '/dashboard'
+    | '/laboratorio'
     | '/medicos'
     | '/pacientes'
     | '/prontuario'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/agendamentos'
     | '/dashboard'
+    | '/laboratorio'
     | '/medicos'
     | '/pacientes'
     | '/prontuario'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/agendamentos'
     | '/dashboard'
+    | '/laboratorio'
     | '/medicos'
     | '/pacientes'
     | '/prontuario'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   AgendamentosRoute: typeof AgendamentosRoute
   DashboardRoute: typeof DashboardRoute
+  LaboratorioRoute: typeof LaboratorioRoute
   MedicosRoute: typeof MedicosRoute
   PacientesRoute: typeof PacientesRoute
   ProntuarioRoute: typeof ProntuarioRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/medicos'
       fullPath: '/medicos'
       preLoaderRoute: typeof MedicosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/laboratorio': {
+      id: '/laboratorio'
+      path: '/laboratorio'
+      fullPath: '/laboratorio'
+      preLoaderRoute: typeof LaboratorioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   AgendamentosRoute: AgendamentosRoute,
   DashboardRoute: DashboardRoute,
+  LaboratorioRoute: LaboratorioRoute,
   MedicosRoute: MedicosRoute,
   PacientesRoute: PacientesRoute,
   ProntuarioRoute: ProntuarioRoute,
